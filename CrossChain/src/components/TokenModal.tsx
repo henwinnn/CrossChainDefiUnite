@@ -68,11 +68,11 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-gray-700">
+      <div className="bg-slate-900 rounded-2xl w-full max-w-sm max-h-[85vh] overflow-hidden border border-gray-700">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-gray-700">
           <div>
-            <h2 className="text-white text-xl font-semibold">Select a network</h2>
+            <h2 className="text-white text-lg font-semibold">Select a network</h2>
             <div className="flex items-center space-x-2 mt-2">
               <span className="text-gray-400 text-sm">From</span>
               <div className="flex items-center space-x-2">
@@ -92,13 +92,13 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
         </div>
 
         {/* Network Selection */}
-        <div className="p-6 border-b border-gray-700">
-          <div className="grid grid-cols-3 gap-3">
+        <div className="p-4 border-b border-gray-700">
+          <div className="grid grid-cols-2 gap-2">
             {networks.map((network) => (
               <button
                 key={network.id}
                 onClick={() => setSelectedNetwork(network)}
-                className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                className={`p-3 rounded-lg border-2 transition-all duration-200 ${
                   selectedNetwork.id === network.id
                     ? `${network.color} bg-gray-800/50`
                     : 'border-gray-700 hover:border-gray-600 bg-gray-800/30'
@@ -106,19 +106,19 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
               >
                 {network.id === 'other' ? (
                   <div className="flex flex-col items-center space-y-2">
-                    <div className="w-12 h-12 rounded-xl bg-gray-700 flex items-center justify-center">
-                      <span className="text-2xl">+</span>
+                    <div className="w-10 h-10 rounded-lg bg-gray-700 flex items-center justify-center">
+                      <span className="text-xl">+</span>
                     </div>
-                    <span className="text-white text-sm font-medium">{network.name}</span>
+                    <span className="text-white text-xs font-medium">{network.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center space-y-2">
                     <img
                       src={network.logo}
                       alt={network.name}
-                      className="w-12 h-12 rounded-xl"
+                      className="w-10 h-10 rounded-lg"
                     />
-                    <span className="text-white text-sm font-medium">{network.name}</span>
+                    <span className="text-white text-xs font-medium">{network.name}</span>
                   </div>
                 )}
               </button>
@@ -127,45 +127,45 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
         </div>
 
         {/* Token Selection */}
-        <div className="p-6">
-          <h3 className="text-white text-lg font-semibold mb-4">Select a token</h3>
+        <div className="p-4">
+          <h3 className="text-white text-base font-semibold mb-3">Select a token</h3>
           
           {/* Search */}
-          <div className="relative mb-6">
+          <div className="relative mb-4">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
               placeholder="Search for a token or paste an address"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-800/50 border border-purple-500/50 rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors"
+              className="w-full bg-gray-800/50 border border-indigo-500/50 rounded-full py-2.5 pl-12 pr-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 transition-colors"
             />
           </div>
 
           {/* Token List */}
           <div className="space-y-1">
-            <h4 className="text-gray-400 text-sm mb-3">Tokens on {selectedNetwork.name}</h4>
-            <div className="max-h-60 overflow-y-auto space-y-1">
+            <h4 className="text-gray-400 text-xs mb-2">Tokens on {selectedNetwork.name}</h4>
+            <div className="max-h-48 overflow-y-auto space-y-1">
               {filteredTokens.map((token, index) => (
                 <button
                   key={index}
                   onClick={() => onSelectToken(token, selectedNetwork)}
-                  className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-800/50 transition-colors group"
+                  className="w-full flex items-center justify-between p-2.5 rounded-lg hover:bg-gray-800/50 transition-colors group"
                 >
                   <div className="flex items-center space-x-3">
                     <img
                       src={token.logo}
                       alt={token.symbol}
-                      className="w-10 h-10 rounded-full"
+                      className="w-8 h-8 rounded-full"
                     />
                     <div className="text-left">
-                      <div className="text-white font-medium">{token.symbol}</div>
-                      <div className="text-gray-400 text-sm">{token.name}</div>
+                      <div className="text-white text-sm font-medium">{token.symbol}</div>
+                      <div className="text-gray-400 text-xs">{token.name}</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-white font-medium">{token.balance}</div>
-                    <div className="text-gray-400 text-sm">{token.usdValue}</div>
+                    <div className="text-white text-sm font-medium">{token.balance}</div>
+                    <div className="text-gray-400 text-xs">{token.usdValue}</div>
                   </div>
                 </button>
               ))}
@@ -174,17 +174,13 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
         </div>
 
         {/* Footer Button */}
-        <div className="p-6 border-t border-gray-700">
+        <div className="p-4 border-t border-gray-700">
           <button
             onClick={onClose}
-            className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
+            className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
           >
             Connect destination wallet
           </button>
-          <div className="text-center mt-4">
-            <span className="text-gray-400 text-sm">Powered by </span>
-            <span className="text-white font-semibold">WORMHOLE</span>
-          </div>
         </div>
       </div>
     </div>

@@ -75,14 +75,14 @@ input:focus-visible {
 
 /* Custom button hover effects */
 .btn-primary {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
   transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
   transform: translateY(-1px);
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
 }
 
 /* Loading animation */

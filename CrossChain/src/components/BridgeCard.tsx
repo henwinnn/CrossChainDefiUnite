@@ -75,9 +75,9 @@ export const BridgeCard: React.FC = () => {
           <div className="flex justify-center relative">
             <button
               onClick={handleSwapTokens}
-              className="absolute -top-2 bg-slate-700 hover:bg-slate-600 border border-gray-600 rounded-full p-2 transition-all duration-200 transform hover:scale-110 z-10"
+              className="absolute -top-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 border border-indigo-500/50 rounded-full p-3 transition-all duration-300 transform hover:scale-110 hover:rotate-180 z-10 shadow-lg"
             >
-              <ArrowUpDown className="text-gray-300" size={16} />
+              <ArrowUpDown className="text-white" size={18} />
             </button>
             <div className="w-full h-px bg-gray-700 mt-2"></div>
           </div>
@@ -116,15 +116,9 @@ export const BridgeCard: React.FC = () => {
           </div>
 
           {/* Connect Button */}
-          <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6">
+          <button className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg">
             Connect destination wallet
           </button>
-
-          {/* Powered by */}
-          <div className="text-center pt-4">
-            <span className="text-gray-400 text-sm">Powered by </span>
-            <span className="text-white font-semibold">WORMHOLE</span>
-          </div>
         </div>
       </div>
 
