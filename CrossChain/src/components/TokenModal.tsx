@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Search } from 'lucide-react';
+import { X, Search, Circle } from 'lucide-react';
 
 interface Network {
   id: string;
@@ -23,33 +23,33 @@ interface TokenModalProps {
 }
 
 const networks: Network[] = [
-  { id: 'eth', name: 'ETH', logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png', color: 'border-purple-500' },
-  { id: 'arb', name: 'ARB', logo: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png', color: 'border-blue-500' },
-  { id: 'base', name: 'BASE', logo: 'https://cryptologos.cc/logos/coinbase-coin-logo.png', color: 'border-blue-600' },
-  { id: 'sui', name: 'SUI', logo: 'https://cryptologos.cc/logos/sui-sui-logo.png', color: 'border-cyan-500' },
-  { id: 'bsc', name: 'BSC', logo: 'https://cryptologos.cc/logos/bnb-bnb-logo.png', color: 'border-yellow-500' },
-  { id: 'other', name: 'other', logo: '', color: 'border-gray-500' }
+  { id: 'eth', name: 'ETH', logo: '', color: 'border-[#dddad0]' },
+  { id: 'arb', name: 'ARB', logo: '', color: 'border-[#f8f3ce]' },
+  { id: 'base', name: 'BASE', logo: '', color: 'border-[#dddad0]' },
+  { id: 'sui', name: 'SUI', logo: '', color: 'border-[#f8f3ce]' },
+  { id: 'bsc', name: 'BSC', logo: '', color: 'border-[#dddad0]' },
+  { id: 'other', name: 'other', logo: '', color: 'border-[#7a7a73]' }
 ];
 
 const tokens: Token[] = [
   {
     symbol: 'ETH',
     name: 'ETH',
-    logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+    logo: '',
     balance: '0.000873',
     usdValue: '$3.27'
   },
   {
     symbol: 'USDC',
     name: 'USD Coin',
-    logo: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png',
+    logo: '',
     balance: '1,234.56',
     usdValue: '$1,234.56'
   },
   {
     symbol: 'WETH',
     name: 'Wrapped Ether',
-    logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+    logo: '',
     balance: '0.5432',
     usdValue: '$2,156.78'
   }
@@ -67,58 +67,56 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
   );
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 rounded-2xl w-full max-w-sm max-h-[85vh] overflow-hidden border border-gray-700">
+    <div className="fixed inset-0 bg-[#57564f]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-[#57564f] rounded-2xl w-full max-w-xs max-h-[70vh] overflow-hidden border border-[#7a7a73]">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+        <div className="flex items-center justify-between p-3 border-b border-[#7a7a73]">
           <div>
-            <h2 className="text-white text-lg font-semibold">Select a network</h2>
-            <div className="flex items-center space-x-2 mt-2">
-              <span className="text-gray-400 text-sm">From</span>
+            <h2 className="text-[#f8f3ce] text-base font-semibold">Select a network</h2>
+            <div className="flex items-center space-x-2 mt-1">
+              <span className="text-[#dddad0]/70 text-xs">From</span>
               <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                  <div className="w-4 h-4 rounded-full bg-white/20"></div>
+                <div className="w-5 h-5 rounded-full bg-gradient-to-r from-[#dddad0] to-[#f8f3ce] flex items-center justify-center">
+                  <div className="w-3 h-3 rounded-full bg-[#57564f]/20"></div>
                 </div>
-                <span className="text-gray-300 text-sm font-mono">0x6532...4ff5</span>
+                <span className="text-[#dddad0] text-xs font-mono">0x6532...4ff5</span>
               </div>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-2"
+            className="text-[#dddad0]/70 hover:text-[#f8f3ce] transition-colors p-1"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Network Selection */}
-        <div className="p-4 border-b border-gray-700">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="p-3 border-b border-[#7a7a73]">
+          <div className="grid grid-cols-2 gap-1.5">
             {networks.map((network) => (
               <button
                 key={network.id}
                 onClick={() => setSelectedNetwork(network)}
-                className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                className={`p-2 rounded-lg border-2 transition-all duration-200 ${
                   selectedNetwork.id === network.id
-                    ? `${network.color} bg-gray-800/50`
-                    : 'border-gray-700 hover:border-gray-600 bg-gray-800/30'
+                    ? `${network.color} bg-[#7a7a73]/50`
+                    : 'border-[#7a7a73] hover:border-[#dddad0] bg-[#7a7a73]/30'
                 }`}
               >
                 {network.id === 'other' ? (
                   <div className="flex flex-col items-center space-y-2">
-                    <div className="w-10 h-10 rounded-lg bg-gray-700 flex items-center justify-center">
-                      <span className="text-xl">+</span>
+                    <div className="w-8 h-8 rounded-lg bg-[#7a7a73] flex items-center justify-center">
+                      <span className="text-[#f8f3ce] text-lg">+</span>
                     </div>
-                    <span className="text-white text-xs font-medium">{network.name}</span>
+                    <span className="text-[#f8f3ce] text-xs font-medium">{network.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center space-y-2">
-                    <img
-                      src={network.logo}
-                      alt={network.name}
-                      className="w-10 h-10 rounded-lg"
-                    />
-                    <span className="text-white text-xs font-medium">{network.name}</span>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#dddad0] to-[#f8f3ce] flex items-center justify-center">
+                      <span className="text-[#57564f] font-bold text-xs">{network.name.charAt(0)}</span>
+                    </div>
+                    <span className="text-[#f8f3ce] text-xs font-medium">{network.name}</span>
                   </div>
                 )}
               </button>
@@ -127,45 +125,43 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
         </div>
 
         {/* Token Selection */}
-        <div className="p-4">
-          <h3 className="text-white text-base font-semibold mb-3">Select a token</h3>
+        <div className="p-3 flex flex-col h-full">
+          <h3 className="text-[#f8f3ce] text-sm font-semibold mb-2">Select a token</h3>
           
           {/* Search */}
-          <div className="relative mb-4">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <div className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#dddad0]/70" size={16} />
             <input
               type="text"
               placeholder="Search for a token or paste an address"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-800/50 border border-indigo-500/50 rounded-full py-2.5 pl-12 pr-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 transition-colors"
+              className="w-full bg-[#7a7a73]/50 border border-[#dddad0]/50 rounded-full py-2 pl-10 pr-3 text-sm text-[#f8f3ce] placeholder-[#dddad0]/50 focus:outline-none focus:border-[#f8f3ce] transition-colors"
             />
           </div>
 
           {/* Token List */}
-          <div className="space-y-1">
-            <h4 className="text-gray-400 text-xs mb-2">Tokens on {selectedNetwork.name}</h4>
-            <div className="max-h-48 overflow-y-auto space-y-1">
+          <div className="flex-1 overflow-hidden">
+            <h4 className="text-[#dddad0]/70 text-xs mb-2">Tokens on {selectedNetwork.name}</h4>
+            <div className="h-32 overflow-y-auto space-y-1 pr-1" style={{ scrollbarWidth: 'thin', scrollbarColor: '#7a7a73 transparent' }}>
               {filteredTokens.map((token, index) => (
                 <button
                   key={index}
                   onClick={() => onSelectToken(token, selectedNetwork)}
-                  className="w-full flex items-center justify-between p-2.5 rounded-lg hover:bg-gray-800/50 transition-colors group"
+                  className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-[#7a7a73]/50 transition-colors group"
                 >
                   <div className="flex items-center space-x-3">
-                    <img
-                      src={token.logo}
-                      alt={token.symbol}
-                      className="w-8 h-8 rounded-full"
-                    />
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#dddad0] to-[#f8f3ce] flex items-center justify-center">
+                      <span className="text-[#57564f] font-bold text-xs">{token.symbol.charAt(0)}</span>
+                    </div>
                     <div className="text-left">
-                      <div className="text-white text-sm font-medium">{token.symbol}</div>
-                      <div className="text-gray-400 text-xs">{token.name}</div>
+                      <div className="text-[#f8f3ce] text-xs font-medium">{token.symbol}</div>
+                      <div className="text-[#dddad0]/70 text-xs">{token.name}</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-white text-sm font-medium">{token.balance}</div>
-                    <div className="text-gray-400 text-xs">{token.usdValue}</div>
+                    <div className="text-[#f8f3ce] text-xs font-medium">{token.balance}</div>
+                    <div className="text-[#dddad0]/70 text-xs">{token.usdValue}</div>
                   </div>
                 </button>
               ))}
@@ -174,10 +170,10 @@ export const TokenModal: React.FC<TokenModalProps> = ({ isOpen, onClose, onSelec
         </div>
 
         {/* Footer Button */}
-        <div className="p-4 border-t border-gray-700">
+        <div className="p-3 border-t border-[#7a7a73]">
           <button
             onClick={onClose}
-            className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+            className="w-full bg-gradient-to-r from-[#7a7a73] via-[#57564f] to-[#7a7a73] hover:from-[#dddad0] hover:via-[#7a7a73] hover:to-[#dddad0] text-[#f8f3ce] font-semibold py-2.5 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg text-sm"
           >
             Connect destination wallet
           </button>

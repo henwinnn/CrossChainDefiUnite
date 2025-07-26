@@ -61,7 +61,7 @@ export const BridgeCard: React.FC = () => {
 
   return (
     <>
-      <div className="w-full max-w-md mx-auto bg-slate-800/40 backdrop-blur-md border border-gray-600/30 rounded-2xl p-6 shadow-2xl">
+      <div className="w-full max-w-md mx-auto bg-[#57564f]/60 backdrop-blur-md border border-[#7a7a73]/50 rounded-2xl p-6 shadow-2xl">
         {/* From Section */}
         <div className="space-y-4">
           <TokenSelector
@@ -75,18 +75,18 @@ export const BridgeCard: React.FC = () => {
           <div className="flex justify-center relative">
             <button
               onClick={handleSwapTokens}
-              className="absolute -top-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 border border-indigo-500/50 rounded-full p-3 transition-all duration-300 transform hover:scale-110 hover:rotate-180 z-10 shadow-lg"
+              className="absolute -top-2 bg-gradient-to-r from-[#7a7a73] to-[#57564f] hover:from-[#dddad0] hover:to-[#7a7a73] border border-[#dddad0]/50 rounded-full p-3 transition-all duration-300 transform hover:scale-110 hover:rotate-180 z-10 shadow-lg"
             >
-              <ArrowUpDown className="text-white" size={18} />
+              <ArrowUpDown className="text-[#f8f3ce]" size={18} />
             </button>
-            <div className="w-full h-px bg-gray-700 mt-2"></div>
+            <div className="w-full h-px bg-[#7a7a73] mt-2"></div>
           </div>
 
           {/* To Section */}
           <div className="pt-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-400 text-sm">To</span>
-              <button className="text-gray-400 hover:text-white transition-colors">
+              <span className="text-[#dddad0]/70 text-sm">To</span>
+              <button className="text-[#dddad0]/70 hover:text-[#f8f3ce] transition-colors">
                 <RotateCcw size={16} />
               </button>
             </div>
@@ -100,23 +100,23 @@ export const BridgeCard: React.FC = () => {
 
           {/* Amount Input */}
           <div className="space-y-2 pt-4">
-            <label className="text-gray-400 text-sm">Amount</label>
+            <label className="text-[#dddad0]/70 text-sm">Amount</label>
             <div className="relative">
               <input
                 type="text"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0"
-                className="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-white text-lg focus:outline-none focus:border-purple-500 transition-colors pr-16"
+                className="w-full bg-[#57564f]/50 border border-[#7a7a73] rounded-xl p-4 text-[#f8f3ce] text-lg focus:outline-none focus:border-[#dddad0] transition-colors pr-16 placeholder-[#dddad0]/50"
               />
-              <button className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors text-sm font-medium">
+              <button className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#dddad0]/70 hover:text-[#f8f3ce] transition-colors text-sm font-medium">
                 Max
               </button>
             </div>
           </div>
 
           {/* Connect Button */}
-          <button className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg">
+          <button className="w-full bg-gradient-to-r from-[#7a7a73] via-[#57564f] to-[#7a7a73] hover:from-[#dddad0] hover:via-[#7a7a73] hover:to-[#dddad0] text-[#f8f3ce] font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg">
             Connect destination wallet
           </button>
         </div>
