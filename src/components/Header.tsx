@@ -1,0 +1,63 @@
+import React from 'react';
+import { Menu, X } from 'lucide-react';
+
+interface HeaderProps {
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (open: boolean) => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  return (
+    <header className="w-full px-4 py-6 flex items-center justify-between relative z-50">
+      {/* Logo */}
+      <div className="flex items-center">
+        <div className="text-white font-bold text-xl tracking-wider">
+          PORTAL
+          <span className="text-xs block text-gray-400 font-normal">BY WORMHOLE</span>
+        </div>
+      </div>
+
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center space-x-8">
+        <a href="#" className="text-white hover:text-purple-300 transition-colors">Bridge</a>
+        <a href="#" className="text-gray-400 hover:text-white transition-colors">USDC</a>
+        <a href="#" className="text-gray-400 hover:text-white transition-colors">Explorer</a>
+        <a href="#" className="text-gray-400 hover:text-white transition-colors">Legacy Tools</a>
+      </nav>
+
+      {/* Wallet Address */}
+      <div className="hidden md:flex items-center space-x-3">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+          <div className="w-6 h-6 rounded-full bg-white/20"></div>
+        </div>
+        <span className="text-gray-300 text-sm font-mono">0x6532...4ff5</span>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden text-white p-2"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="absolute top-full left-0 right-0 bg-slate-900/95 backdrop-blur-sm border-t border-gray-700 md:hidden">
+          <nav className="flex flex-col p-4 space-y-4">
+            <a href="#" className="text-white hover:text-purple-300 transition-colors">Bridge</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">USDC</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">Explorer</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">Legacy Tools</a>
+            <div className="flex items-center space-x-3 pt-4 border-t border-gray-700">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-white/20"></div>
+              </div>
+              <span className="text-gray-300 text-sm font-mono">0x6532...4ff5</span>
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+};
