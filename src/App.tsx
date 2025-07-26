@@ -1,8 +1,10 @@
 @@ .. @@
  function App() {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+ }
  
    return (
+   )
 -    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
 +    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 relative overflow-hidden">
        {/* Background Effects */}
