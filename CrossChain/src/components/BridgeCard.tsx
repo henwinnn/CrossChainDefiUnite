@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { ArrowUpDown, RotateCcw } from 'lucide-react';
-import { TokenSelector } from './TokenSelector';
-import { TokenModal } from './TokenModal';
+import React, { useState } from "react";
+import { ArrowUpDown, RotateCcw } from "lucide-react";
+import { TokenSelector } from "./TokenSelector";
+import { TokenModal } from "./TokenModal";
+import { getOrderHashFunction } from "../utils/OrderHash";
+import { convertToTokenAmount } from "../utils/helper";
+import { useAccount } from "wagmi";
 
 interface Token {
   symbol: string;
@@ -18,29 +21,31 @@ interface Network {
 }
 
 export const BridgeCard: React.FC = () => {
+  const account = useAccount();
+  const userAddress = account.address;
   const [fromToken, setFromToken] = useState<Token | undefined>({
-    symbol: 'ETH',
-    name: 'Ethereum',
-    logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-    chain: 'Ethereum'
+    symbol: "ETH",
+    name: "Ethereum",
+    logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    chain: "Ethereum",
   });
   const [toToken, setToToken] = useState<Token | undefined>({
-    symbol: 'SOL',
-    name: 'Solana',
-    logo: 'https://cryptologos.cc/logos/solana-sol-logo.png',
-    chain: 'Solana'
+    symbol: "MON",
+    name: "Monad",
+    logo: "https://cryptologos.cc/logos/monad-logo.png",
+    chain: "Monad",
   });
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<'from' | 'to'>('from');
+  const [modalType, setModalType] = useState<"from" | "to">("from");
 
   const handleTokenSelect = (token: any, network: Network) => {
     const selectedToken = {
       ...token,
-      chain: network.name
+      chain: network.name,
     };
-    
-    if (modalType === 'from') {
+
+    if (modalType === "from") {
       setFromToken(selectedToken);
     } else {
       setToToken(selectedToken);
@@ -54,9 +59,33 @@ export const BridgeCard: React.FC = () => {
     setToToken(temp);
   };
 
-  const openModal = (type: 'from' | 'to') => {
+  const openModal = (type: "from" | "to") => {
     setModalType(type);
     setIsModalOpen(true);
+  };
+
+  const handleCrossChain = (tokenSelect: string, userSellAmount: string) => {
+    const exchangeRate = 0.95; // fee
+
+    // Calculate user buy amount based on exchange rate
+    const userBuyAmount = (
+      parseFloat(userSellAmount) * exchangeRate
+    ).toString();
+
+    // Convert ke bigint
+    const makingAmount = convertToTokenAmount(userSellAmount); // 1500000000000000000n
+    const takingAmount = convertToTokenAmount(userBuyAmount); // 2000000000000000000n
+
+    const testHash = getOrderHashFunction(
+      tokenSelect === "Ethereum" ? "sepolia-to-monad" : "monad-to-sepolia",
+      makingAmount,
+      takingAmount,
+      userAddress
+    );
+
+    console.log("Order Hash Function :", testHash);
+    console.log("makingAmount :", makingAmount);
+    console.log("takingAmount :", takingAmount);
   };
 
   return (
@@ -68,7 +97,7 @@ export const BridgeCard: React.FC = () => {
             label="From"
             selectedToken={fromToken}
             placeholder="Select token"
-            onClick={() => openModal('from')}
+            onClick={() => openModal("from")}
           />
 
           {/* Swap Button */}
@@ -94,7 +123,7 @@ export const BridgeCard: React.FC = () => {
               label=""
               selectedToken={toToken}
               placeholder="Select token"
-              onClick={() => openModal('to')}
+              onClick={() => openModal("to")}
             />
           </div>
 
@@ -116,7 +145,12 @@ export const BridgeCard: React.FC = () => {
           </div>
 
           {/* Connect Button */}
-          <button className="w-full bg-gradient-to-r from-[#7a7a73] via-[#57564f] to-[#7a7a73] hover:from-[#dddad0] hover:via-[#7a7a73] hover:to-[#dddad0] text-[#f8f3ce] font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg">
+          <button
+            onClick={() =>
+              fromToken?.name && handleCrossChain(fromToken.name, amount)
+            }
+            className="w-full bg-gradient-to-r from-[#7a7a73] via-[#57564f] to-[#7a7a73] hover:from-[#dddad0] hover:via-[#7a7a73] hover:to-[#dddad0] text-[#f8f3ce] font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg"
+          >
             Connect destination wallet
           </button>
         </div>
