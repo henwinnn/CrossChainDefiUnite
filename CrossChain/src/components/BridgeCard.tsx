@@ -3,7 +3,7 @@ import { ArrowUpDown, RotateCcw } from "lucide-react";
 import { TokenSelector } from "./TokenSelector";
 import { TokenModal } from "./TokenModal";
 import { getOrderHashFunction } from "../utils/OrderHash";
-import { convertToTokenAmount } from "../utils/helper";
+import { convertToTokenAmount, getImmutables } from "../utils/helper";
 import { useAccount } from "wagmi";
 
 interface Token {
@@ -64,7 +64,10 @@ export const BridgeCard: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleCrossChain = (tokenSelect: string, userSellAmount: string) => {
+  const handleCrossChain = async (
+    tokenSelect: string,
+    userSellAmount: string
+  ) => {
     const exchangeRate = 0.95; // fee
 
     // Calculate user buy amount based on exchange rate
@@ -76,14 +79,16 @@ export const BridgeCard: React.FC = () => {
     const makingAmount = convertToTokenAmount(userSellAmount); // 1500000000000000000n
     const takingAmount = convertToTokenAmount(userBuyAmount); // 2000000000000000000n
 
-    const testHash = getOrderHashFunction(
+    const OrderHash = await getOrderHashFunction(
       tokenSelect === "Ethereum" ? "sepolia-to-monad" : "monad-to-sepolia",
       makingAmount,
       takingAmount,
       userAddress
     );
 
-    console.log("Order Hash Function :", testHash);
+    // const immutables = getImmutables(OrderHash, hashlock, userAddress, userAddress, fromToken?.symbol, makingAmount, 0n, 0);
+
+    console.log("Order Hash Function :", OrderHash);
     console.log("makingAmount :", makingAmount);
     console.log("takingAmount :", takingAmount);
   };
