@@ -7,8 +7,9 @@ import {
   // Api,
   // getLimitOrderV4Domain,
 } from "@1inch/limit-order-sdk";
+import { SDK } from "@1inch/cross-chain-sdk";
 
-export function getOrderHashFunction(
+export async function getOrderHashFunction(
   direction: string,
   makingAmount: bigint,
   takingAmount: bigint,
@@ -49,8 +50,21 @@ export function getOrderHashFunction(
     makerTraits
   );
 
+  const sdk = new SDK({
+    url: "https://api.1inch.dev/fusion-plus",
+    authKey: process.env.AUTH_KEY,
+  });
+
+  const orders = await sdk.getOrdersByMaker({
+    page: 1,
+    limit: 2,
+    address: "0x1119260c3F217fb80266A4b0b5945C7e2a5ad6a1",
+  });
+  console.log("Sdk.orders", orders);
+
   console.log("networkId", networkId);
   const orderHash = order.getOrderHash(networkId);
+  console.log("order", order.build());
 
   return orderHash;
 }
