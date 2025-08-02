@@ -51,17 +51,12 @@ export async function getOrderHashFunction(
     makerTraits
   );
 
-  const sdk = new SDK({
-    url: "https://1inch-proxy-dev.vercel.app", // proxy url from https://api.1inch.dev/
-    authKey: process.env.AUTH_KEY,
-  });
+  // const sdk = new SDK({
+  //   url: "https://1inch-proxy-dev.vercel.app", // proxy url from https://api.1inch.dev/
+  //   authKey: process.env.AUTH_KEY,
+  // });
 
-  const orders = await sdk.getOrdersByMaker({
-    page: 1,
-    limit: 2,
-    address: "0x1119260c3F217fb80266A4b0b5945C7e2a5ad6a1",
-  });
-  console.log("Sdk.orders", sdk);
+  console.log("order", order);
   console.log("networkId", networkId);
   const orderHash = order.getOrderHash(networkId);
   // console.log("orders", orders);
