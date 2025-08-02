@@ -8,6 +8,7 @@ import {
   // getLimitOrderV4Domain,
 } from "@1inch/limit-order-sdk";
 import { SDK } from "@1inch/cross-chain-sdk";
+// import Web3 from "web3";
 
 export async function getOrderHashFunction(
   direction: string,
@@ -51,17 +52,16 @@ export async function getOrderHashFunction(
   );
 
   const sdk = new SDK({
-    url: "https://api.1inch.dev/fusion-plus",
+    url: "https://1inch-proxy-dev.vercel.app/", // proxy url from https://api.1inch.dev/
     authKey: process.env.AUTH_KEY,
   });
 
-  const orders = await sdk.getOrdersByMaker({
-    page: 1,
-    limit: 2,
-    address: "0x1119260c3F217fb80266A4b0b5945C7e2a5ad6a1",
-  });
-  console.log("Sdk.orders", orders);
-
+  //   const orders = await sdk.getOrdersByMaker({
+  //     page: 1,
+  //     limit: 2,
+  //     address: "0x1119260c3F217fb80266A4b0b5945C7e2a5ad6a1",
+  //   });
+  console.log("Sdk.orders", sdk);
   console.log("networkId", networkId);
   const orderHash = order.getOrderHash(networkId);
   console.log("order", order.build());
