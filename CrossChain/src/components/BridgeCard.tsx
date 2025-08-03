@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ArrowUpDown, RotateCcw } from "lucide-react";
 import { TokenSelector } from "./TokenSelector";
 import { TokenModal } from "./TokenModal";
 import { getOrderHashFunction } from "../utils/OrderHash";
 import { convertToTokenAmount, getImmutables } from "../utils/helper";
 import { useAccount } from "wagmi";
+import { useWriteInitiateSwapWithLOP } from "../hooks/writecontracts";
+import { keccak256, toHex } from "viem";
 
 interface Token {
   symbol: string;
@@ -22,6 +26,7 @@ interface Network {
 
 export const BridgeCard: React.FC = () => {
   const account = useAccount();
+  const { InitiateSwapWithLOP } = useWriteInitiateSwapWithLOP();
   const userAddress = account.address;
   const [fromToken, setFromToken] = useState<Token | undefined>({
     symbol: "ETH",
@@ -39,6 +44,10 @@ export const BridgeCard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"from" | "to">("from");
 
+  // Mock balances
+  const [fromTokenBalance, setFromTokenBalance] = useState<number>(10.0); // 10 ETH
+  const [toTokenBalance, setToTokenBalance] = useState<number>(5.0); // 5 MON
+
   const handleTokenSelect = (token: any, network: Network) => {
     const selectedToken = {
       ...token,
@@ -47,8 +56,11 @@ export const BridgeCard: React.FC = () => {
 
     if (modalType === "from") {
       setFromToken(selectedToken);
+      // Optionally reset balance for mock
+      setFromTokenBalance(10.0);
     } else {
       setToToken(selectedToken);
+      setToTokenBalance(5.0);
     }
     setIsModalOpen(false);
   };
@@ -57,6 +69,10 @@ export const BridgeCard: React.FC = () => {
     const temp = fromToken;
     setFromToken(toToken);
     setToToken(temp);
+    // Swap balances as well
+    const tempBalance = fromTokenBalance;
+    setFromTokenBalance(toTokenBalance);
+    setToTokenBalance(tempBalance);
   };
 
   const openModal = (type: "from" | "to") => {
@@ -68,29 +84,111 @@ export const BridgeCard: React.FC = () => {
     tokenSelect: string,
     userSellAmount: string
   ) => {
-    const exchangeRate = 0.95; // fee
-
-    // Calculate user buy amount based on exchange rate
+    const exchangeRate = 0.95;
     const userBuyAmount = (
       parseFloat(userSellAmount) * exchangeRate
     ).toString();
+    const makingAmount = convertToTokenAmount(userSellAmount);
+    const takingAmount = convertToTokenAmount(userBuyAmount);
 
-    // Convert ke bigint
-    const makingAmount = convertToTokenAmount(userSellAmount); // 1500000000000000000n
-    const takingAmount = convertToTokenAmount(userBuyAmount); // 2000000000000000000n
+    const swapId = keccak256(toHex(Date.now().toString())); // or generate securely
+    const secret = keccak256(toHex("some-random-secret")); // H(secret) = secretHash
+    const secretHash = secret;
 
-    const OrderHash = await getOrderHashFunction(
+    const timelock = BigInt(Math.floor(Date.now() / 1000) + 3600); // 1 hour later
+    const isInitiatorSide = true;
+
+    // Replace with real addresses
+    const tokenA = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
+    const tokenB = "0xC78026eB00FCaE349F9b09A03687d51dD77A2733";
+    const participant = userAddress as `0x${string}`;
+
+    const {
+      orderData, // plain object
+      orderHash,
+    } = await getOrderHashFunction(
       tokenSelect === "Ethereum" ? "sepolia-to-monad" : "monad-to-sepolia",
       makingAmount,
       takingAmount,
       userAddress
     );
 
-    // const immutables = getImmutables(OrderHash, hashlock, userAddress, userAddress, fromToken?.symbol, makingAmount, 0n, 0);
+    const r = keccak256(toHex("r")).slice(0, 66);
+    const vs = keccak256(toHex("vs")).slice(0, 66);
+    const takerTraits = 0n;
+    const args = "0x";
 
-    console.log("Order Hash Function :", OrderHash);
-    console.log("makingAmount :", makingAmount);
-    console.log("takingAmount :", takingAmount);
+    console.log("orderData.salt:", typeof orderData.salt, orderData.salt);
+    console.log(
+      "orderData.makingAmount:",
+      typeof orderData.makingAmount,
+      orderData.makingAmount
+    );
+    console.log(
+      "orderData.takingAmount:",
+      typeof orderData.takingAmount,
+      orderData.takingAmount
+    );
+    console.log(
+      "orderData.makerTraits:",
+      typeof orderData.makerTraits,
+      orderData.makerTraits
+    );
+
+    try {
+      const tx = await InitiateSwapWithLOP(
+        swapId,
+        participant,
+        tokenA,
+        tokenB,
+        makingAmount,
+        takingAmount,
+        secretHash,
+        timelock,
+        isInitiatorSide,
+        orderData,
+        r,
+        vs,
+        takerTraits,
+        args
+      );
+      console.log("tx:", tx);
+      // Update mock balances
+      setFromTokenBalance((prev) => prev - parseFloat(amount));
+      setToTokenBalance((prev) => prev + parseFloat(userBuyAmount));
+      toast.success(
+        <span>
+          Swap sent!
+          <br />
+          <a
+            href={`https://sepolia.etherscan.io/tx/${tx.hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-blue-300"
+          >
+            View on Etherscan
+          </a>
+        </span>,
+        {
+          duration: 8000,
+          style: {
+            background: "#333",
+            color: "#f8f3ce",
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Swap failed", err);
+      toast.error("Swap transaction failed!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   return (
@@ -104,6 +202,9 @@ export const BridgeCard: React.FC = () => {
             placeholder="Select token"
             onClick={() => openModal("from")}
           />
+          <div className="flex justify-between items-center text-xs text-[#f8f3ce]/80 mb-2">
+            <span>Available: {fromTokenBalance.toFixed(4)} {fromToken?.symbol}</span>
+          </div>
 
           {/* Swap Button */}
           <div className="flex justify-center relative">
@@ -130,6 +231,9 @@ export const BridgeCard: React.FC = () => {
               placeholder="Select token"
               onClick={() => openModal("to")}
             />
+            <div className="flex justify-between items-center text-xs text-[#f8f3ce]/80 mb-2">
+              <span>Available: {toTokenBalance.toFixed(4)} {toToken?.symbol}</span>
+            </div>
           </div>
 
           {/* Amount Input */}
@@ -156,7 +260,7 @@ export const BridgeCard: React.FC = () => {
             }
             className="w-full bg-gradient-to-r from-[#7a7a73] via-[#57564f] to-[#7a7a73] hover:from-[#dddad0] hover:via-[#7a7a73] hover:to-[#dddad0] text-[#f8f3ce] font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg"
           >
-            Connect destination wallet
+            Swap
           </button>
         </div>
       </div>
@@ -166,6 +270,7 @@ export const BridgeCard: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSelectToken={handleTokenSelect}
       />
+      <ToastContainer />
     </>
   );
 };

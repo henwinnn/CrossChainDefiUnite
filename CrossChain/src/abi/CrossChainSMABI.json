@@ -1,0 +1,368 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "limitOrderProtocol",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "InvalidSecret", "type": "error" },
+  { "inputs": [], "name": "InvalidTimelock", "type": "error" },
+  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" }
+    ],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  { "inputs": [], "name": "SwapAlreadyCancelled", "type": "error" },
+  { "inputs": [], "name": "SwapAlreadyCompleted", "type": "error" },
+  { "inputs": [], "name": "SwapAlreadyExists", "type": "error" },
+  { "inputs": [], "name": "SwapNotFound", "type": "error" },
+  { "inputs": [], "name": "TimelockExpired", "type": "error" },
+  { "inputs": [], "name": "UnauthorizedParticipant", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "swapId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SwapCancelled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "swapId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "secret",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SwapCompleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "swapId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "initiator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "participant",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tokenA",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tokenB",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountA",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountB",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "secretHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timelock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isInitiatorSide",
+        "type": "bool"
+      }
+    ],
+    "name": "SwapInitiated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "swapId", "type": "bytes32" }
+    ],
+    "name": "cancelSwap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "swapId", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "secret", "type": "bytes32" },
+      { "internalType": "uint256", "name": "fillAmount", "type": "uint256" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "salt", "type": "uint256" },
+          { "internalType": "Address", "name": "maker", "type": "uint256" },
+          { "internalType": "Address", "name": "receiver", "type": "uint256" },
+          {
+            "internalType": "Address",
+            "name": "makerAsset",
+            "type": "uint256"
+          },
+          {
+            "internalType": "Address",
+            "name": "takerAsset",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "makingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "takingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "MakerTraits",
+            "name": "makerTraits",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IOrderMixin.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "vs", "type": "bytes32" },
+      {
+        "internalType": "TakerTraits",
+        "name": "takerTraits",
+        "type": "uint256"
+      },
+      { "internalType": "bytes", "name": "args", "type": "bytes" }
+    ],
+    "name": "completePartialSwap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "swapId", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "secret", "type": "bytes32" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "salt", "type": "uint256" },
+          { "internalType": "Address", "name": "maker", "type": "uint256" },
+          { "internalType": "Address", "name": "receiver", "type": "uint256" },
+          {
+            "internalType": "Address",
+            "name": "makerAsset",
+            "type": "uint256"
+          },
+          {
+            "internalType": "Address",
+            "name": "takerAsset",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "makingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "takingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "MakerTraits",
+            "name": "makerTraits",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IOrderMixin.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "vs", "type": "bytes32" },
+      {
+        "internalType": "TakerTraits",
+        "name": "takerTraits",
+        "type": "uint256"
+      },
+      { "internalType": "bytes", "name": "args", "type": "bytes" }
+    ],
+    "name": "completeSwapWithLOP",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "swapId", "type": "bytes32" }
+    ],
+    "name": "getSwap",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "initiator", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "participant",
+            "type": "address"
+          },
+          { "internalType": "address", "name": "tokenA", "type": "address" },
+          { "internalType": "address", "name": "tokenB", "type": "address" },
+          { "internalType": "uint256", "name": "amountA", "type": "uint256" },
+          { "internalType": "uint256", "name": "amountB", "type": "uint256" },
+          {
+            "internalType": "bytes32",
+            "name": "secretHash",
+            "type": "bytes32"
+          },
+          { "internalType": "uint256", "name": "timelock", "type": "uint256" },
+          { "internalType": "bool", "name": "completed", "type": "bool" },
+          { "internalType": "bool", "name": "cancelled", "type": "bool" },
+          { "internalType": "bool", "name": "isInitiatorSide", "type": "bool" }
+        ],
+        "internalType": "struct CrossChainSM.Swap",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "swapId", "type": "bytes32" },
+      { "internalType": "address", "name": "participant", "type": "address" },
+      { "internalType": "address", "name": "tokenA", "type": "address" },
+      { "internalType": "address", "name": "tokenB", "type": "address" },
+      { "internalType": "uint256", "name": "amountA", "type": "uint256" },
+      { "internalType": "uint256", "name": "amountB", "type": "uint256" },
+      { "internalType": "bytes32", "name": "secretHash", "type": "bytes32" },
+      { "internalType": "uint256", "name": "timelock", "type": "uint256" },
+      { "internalType": "bool", "name": "isInitiatorSide", "type": "bool" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "salt", "type": "uint256" },
+          { "internalType": "Address", "name": "maker", "type": "uint256" },
+          { "internalType": "Address", "name": "receiver", "type": "uint256" },
+          {
+            "internalType": "Address",
+            "name": "makerAsset",
+            "type": "uint256"
+          },
+          {
+            "internalType": "Address",
+            "name": "takerAsset",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "makingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "takingAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "MakerTraits",
+            "name": "makerTraits",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IOrderMixin.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "vs", "type": "bytes32" },
+      {
+        "internalType": "TakerTraits",
+        "name": "takerTraits",
+        "type": "uint256"
+      },
+      { "internalType": "bytes", "name": "args", "type": "bytes" }
+    ],
+    "name": "initiateSwapWithLOP",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "swapId", "type": "bytes32" }
+    ],
+    "name": "isSwapActive",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "swaps",
+    "outputs": [
+      { "internalType": "address", "name": "initiator", "type": "address" },
+      { "internalType": "address", "name": "participant", "type": "address" },
+      { "internalType": "address", "name": "tokenA", "type": "address" },
+      { "internalType": "address", "name": "tokenB", "type": "address" },
+      { "internalType": "uint256", "name": "amountA", "type": "uint256" },
+      { "internalType": "uint256", "name": "amountB", "type": "uint256" },
+      { "internalType": "bytes32", "name": "secretHash", "type": "bytes32" },
+      { "internalType": "uint256", "name": "timelock", "type": "uint256" },
+      { "internalType": "bool", "name": "completed", "type": "bool" },
+      { "internalType": "bool", "name": "cancelled", "type": "bool" },
+      { "internalType": "bool", "name": "isInitiatorSide", "type": "bool" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

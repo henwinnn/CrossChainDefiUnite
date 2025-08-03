@@ -16,10 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Logo */}
       <div className="flex items-center">
         <div className="text-white font-bold text-xl tracking-wider">
-          PORTAL
-          <span className="text-xs block text-gray-400 font-normal">
-            BY WORMHOLE
-          </span>
+          Henshinswap
         </div>
       </div>
 
