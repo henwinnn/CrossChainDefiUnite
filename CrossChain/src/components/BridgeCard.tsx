@@ -208,7 +208,7 @@ export const BridgeCard: React.FC = () => {
             }
             className="w-full bg-gradient-to-r from-[#7a7a73] via-[#57564f] to-[#7a7a73] hover:from-[#dddad0] hover:via-[#7a7a73] hover:to-[#dddad0] text-[#f8f3ce] font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] mt-6 shadow-lg"
           >
-            Connect destination wallet
+            Swap
           </button>
         </div>
       </div>
