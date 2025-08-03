@@ -55,12 +55,6 @@ The project uses TypeScript and JavaScript for frontend/integration, Solidity fo
    ```
 
 
-## 🎥 Demo Video
-
-Watch our demo here:  
-[Demo Video Link Coming Soon](#)
-
-
 
 ## 🧑‍💻 Contributing
 
