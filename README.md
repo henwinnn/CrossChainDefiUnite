@@ -53,21 +53,14 @@ The project uses TypeScript and JavaScript for frontend/integration, Solidity fo
    ```bash
    npm install
    ```
-3. **Compile smart contracts**
-   ```bash
-   npx hardhat compile
-   ```
-4. **Deploy to your preferred network (Monad/Sepolia)**
-   ```bash
-   npx hardhat run scripts/deploy.js --network <network>
-   ```
+
 
 ## 🎥 Demo Video
 
 Watch our demo here:  
 [Demo Video Link Coming Soon](#)
 
-*(Replace the link above with your video when it’s ready!)*
+
 
 ## 🧑‍💻 Contributing
 
