@@ -61,5 +61,19 @@ export async function getOrderHashFunction(
   const orderHash = order.getOrderHash(networkId);
   // console.log("orders", orders);
 
-  return orderHash;
+  return {
+    orderData: {
+      salt: order.salt,
+      // maker: order.maker.value as `0x${string}`,
+      maker: order.maker.toString() as `0x${string}`,
+      receiver: order.receiver.toString() as `0x${string}`,
+      makerAsset: order.makerAsset.toString() as `0x${string}`,
+      takerAsset: order.takerAsset.toString() as `0x${string}`,
+      makingAmount: order.makingAmount,
+      takingAmount: order.takingAmount,
+      // makerTraits: makerTraits.valueOf() as bigint,
+      makerTraits: BigInt(makerTraits.value.value.toString()),
+    },
+    orderHash,
+  };
 }
