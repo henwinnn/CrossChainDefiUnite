@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ArrowUpDown, RotateCcw } from "lucide-react";
 import { TokenSelector } from "./TokenSelector";
 import { TokenModal } from "./TokenModal";
@@ -42,6 +44,10 @@ export const BridgeCard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"from" | "to">("from");
 
+  // Mock balances
+  const [fromTokenBalance, setFromTokenBalance] = useState<number>(10.0); // 10 ETH
+  const [toTokenBalance, setToTokenBalance] = useState<number>(5.0); // 5 MON
+
   const handleTokenSelect = (token: any, network: Network) => {
     const selectedToken = {
       ...token,
@@ -50,8 +56,11 @@ export const BridgeCard: React.FC = () => {
 
     if (modalType === "from") {
       setFromToken(selectedToken);
+      // Optionally reset balance for mock
+      setFromTokenBalance(10.0);
     } else {
       setToToken(selectedToken);
+      setToTokenBalance(5.0);
     }
     setIsModalOpen(false);
   };
@@ -60,6 +69,10 @@ export const BridgeCard: React.FC = () => {
     const temp = fromToken;
     setFromToken(toToken);
     setToToken(temp);
+    // Swap balances as well
+    const tempBalance = fromTokenBalance;
+    setFromTokenBalance(toTokenBalance);
+    setToTokenBalance(tempBalance);
   };
 
   const openModal = (type: "from" | "to") => {
@@ -140,8 +153,41 @@ export const BridgeCard: React.FC = () => {
         args
       );
       console.log("tx:", tx);
+      // Update mock balances
+      setFromTokenBalance((prev) => prev - parseFloat(amount));
+      setToTokenBalance((prev) => prev + parseFloat(userBuyAmount));
+      toast.success(
+        <span>
+          Swap sent!
+          <br />
+          <a
+            href={`https://sepolia.etherscan.io/tx/${tx.hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-blue-300"
+          >
+            View on Etherscan
+          </a>
+        </span>,
+        {
+          duration: 8000,
+          style: {
+            background: "#333",
+            color: "#f8f3ce",
+          },
+        }
+      );
     } catch (err) {
       console.error("Swap failed", err);
+      toast.error("Swap transaction failed!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -156,6 +202,9 @@ export const BridgeCard: React.FC = () => {
             placeholder="Select token"
             onClick={() => openModal("from")}
           />
+          <div className="flex justify-between items-center text-xs text-[#f8f3ce]/80 mb-2">
+            <span>Available: {fromTokenBalance.toFixed(4)} {fromToken?.symbol}</span>
+          </div>
 
           {/* Swap Button */}
           <div className="flex justify-center relative">
@@ -182,6 +231,9 @@ export const BridgeCard: React.FC = () => {
               placeholder="Select token"
               onClick={() => openModal("to")}
             />
+            <div className="flex justify-between items-center text-xs text-[#f8f3ce]/80 mb-2">
+              <span>Available: {toTokenBalance.toFixed(4)} {toToken?.symbol}</span>
+            </div>
           </div>
 
           {/* Amount Input */}
@@ -218,6 +270,7 @@ export const BridgeCard: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSelectToken={handleTokenSelect}
       />
+      <ToastContainer />
     </>
   );
 };
